@@ -1,0 +1,151 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>일일 리포트 - {{ report.user_name }}</title>
+  <style>
+    /* --- 기본 레이아웃 --- */
+    :root{
+      --sidebar-w: 220px;
+      --accent: #6b46c1; /* 보라 계열 */
+      --muted: #6b7280;
+      --bg: #f7f7f8;
+      --card-bg: #fff;
+    }
+    html,body{height:100%; margin:0; font-family: "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif; background:var(--bg); color:#111;}
+    .app{display:flex; min-height:100vh;}
+    /* 사이드바 */
+    .sidebar{width:var(--sidebar-w); background:#fff; padding:24px 12px; box-shadow: 0 0 0 1px rgba(0,0,0,0.03) inset;}
+    .nav{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;}
+    .nav a{display:block; padding:12px 16px; border-radius:8px; color:var(--muted); text-decoration:none;}
+    .nav a.active{background:#000; color:#fff; font-weight:600;}
+    .sidebar h1{font-size:18px; margin:0 0 12px 8px;}
+    /* 메인 컨텐츠 */
+    .main{flex:1; padding:28px; display:flex; gap:24px;}
+    .left-panel{width:300px; background:var(--card-bg); padding:20px; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.03);}
+    .left-panel label{display:block; font-size:13px; color:var(--muted); margin-top:12px;}
+    .left-panel input[type="text"]{width:100%; padding:10px 12px; margin-top:6px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px;}
+    .btn{display:inline-block; margin-top:18px; padding:10px 18px; border-radius:8px; background:#111; color:#fff; text-decoration:none; font-weight:600;}
+    /* 리포트 카드(중앙) */
+    .report-card{flex:1; background:var(--card-bg); border-radius:12px; padding:32px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); position:relative;}
+    .report-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;}
+    .report-title{font-size:20px; font-weight:700;}
+    .report-sub{color:var(--muted); font-size:13px;}
+    .avatar{width:36px; height:36px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700;}
+    hr.sep{border:0; height:1px; background:#eee; margin:18px 0 22px;}
+    .section h3{font-size:15px; margin:6px 0 8px;}
+    .summary{background:#fafafa; padding:12px 14px; border-radius:8px; border:1px solid #f0f0f0; color:#111; line-height:1.6;}
+    .metrics, .timeline{margin-top:12px;}
+    .metrics ul, .timeline ul{padding-left:18px; margin:8px 0;}
+    .metrics li{margin:6px 0;}
+    .timeline li{margin:8px 0;}
+    .badge{display:inline-block; padding:4px 8px; border-radius:999px; background:#f3f4f6; font-size:12px; color:var(--muted);}
+    .conclusion{margin-top:18px; color:#333; line-height:1.6;}
+    /* 반응형 */
+    @media (max-width:900px){
+      .app{flex-direction:column;}
+      .sidebar{width:100%; display:flex; overflow-x:auto;}
+      .main{flex-direction:column;}
+      .left-panel{width:100%;}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <h1>대시보드</h1>
+      <nav>
+        <ul class="nav">
+          <li><a href="#">홈 화면</a></li>
+          <li><a href="#">실시간 상태</a></li>
+          <li><a href="#" class="active">일일 리포트</a></li>
+          <li><a href="#">데이터 조회</a></li>
+          <li><a href="#">지식 검색</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <!-- 왼쪽: 대상/기간 입력 -->
+      <aside class="left-panel">
+        <form method="get" action="{% url 'report_create' %}">
+          <label for="target">보호대상자</label>
+          <input id="target" name="target" type="text" value="{{ request.GET.target|default:report.user_name }}" placeholder="박주연">
+
+          <label for="period">기간</label>
+          <input id="period" name="period" type="text" value="{{ request.GET.period|default:report.date }}" placeholder="2025년 8월 18일">
+
+          <button type="submit" class="btn">리포트 생성</button>
+        </form>
+      </aside>
+
+      <!-- 중앙: 리포트 카드 -->
+      <section class="report-card" role="article" aria-labelledby="report-title">
+        <div class="report-header">
+          <div>
+            <div id="report-title" class="report-title">{{ report.user_name }} 님의 {{ report.date }} 리포트 생성해줘</div>
+            <div class="report-sub">[{{ report.date }} 리포트: {{ report.user_name }}]</div>
+          </div>
+          <div style="display:flex; gap:12px; align-items:center;">
+            <div class="report-sub" style="font-size:13px;">{{ report.author_name }}</div>
+            <div class="avatar">{{ report.user_initial|default:"J" }}</div>
+          </div>
+        </div>
+
+        <hr class="sep" />
+
+        <div class="section">
+          <h3>핵심 요약</h3>
+          <div class="summary">
+            {{ report.summary|default:"요약 내용이 여기에 표시됩니다. 예: 오늘 하루 대부분 안정적이었으나, 오후 4시 30분경 '등록되지 않은 지역'에서 외부 충격과 급심한 스트레스 반응이 동반된 복합 위험이 1회 발생했습니다." }}
+          </div>
+        </div>
+
+        <div class="section metrics">
+          <h3>주요 지표</h3>
+          <ul>
+            {% if report.metrics %}
+              {% for m in report.metrics %}
+                <li>• {{ m.label }}: {{ m.value }}</li>
+              {% endfor %}
+            {% else %}
+              <li>• 총 위험 이벤트: 4회</li>
+              <li>• 외부 충격 감지(움직임 센서): 1회</li>
+              <li>• 정신적 압박 감지(심박수 분석): 3회</li>
+              <li>• 최고 스트레스 지수: 99 (오후 4시 35분)</li>
+              <li>• 주요 활동 구역: 안전 구역(집, 회사) 내 활동</li>
+            {% endif %}
+          </ul>
+        </div>
+
+        <div class="section timeline">
+          <h3>주요 이벤트 타임라인</h3>
+          <ul>
+            {% if report.timeline %}
+              {% for t in report.timeline %}
+                <li><strong>{{ t.time }}</strong> — {{ t.text }}</li>
+              {% endfor %}
+            {% else %}
+              <li><strong>오전 9시 05분:</strong> (회사) 별다른 움직임 없이 스트레스 반응만 감지됨.</li>
+              <li><strong>오후 2시 15분:</strong> (회사) 스트레스 반응 2차 감지됨.</li>
+              <li><strong>오후 4시 30분:</strong> (회사 이탈) 안전 구역을 벗어남.</li>
+              <li><strong>오후 4시 35분:</strong> (긴급) '등록되지 않은 지역'에서 강한 외부 충격 및 스트레스 반응 동시 발생.</li>
+              <li><strong>오후 6시 45분:</strong> (자택 복귀) '집(안전 구역)'으로 복귀 후 신호 안정.</li>
+            {% endif %}
+          </ul>
+        </div>
+
+        <div class="section">
+          <h3>종합 의견 및 제안</h3>
+          <p class="conclusion">
+            {{ report.conclusion|default:"어제 발생한 위험 이벤트는 특정 장소에서 갑작스럽게 발생했으며, 그 전후로 스트레스 반응이 선행되는 패턴을 보였습니다. 해당 시간대의 동선과 상황에 대한 확인이 필요해 보입니다. 현재는 안정 상태를 유지하고 있습니다." }}
+          </p>
+        </div>
+
+      </section>
+    </main>
+  </div>
+</body>
+</html>
