@@ -21,4 +21,7 @@ from report.views import report
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
+    path("report/", include("report.urls")),   
+    path("dbchat/", include("dbchat.urls")),   
 ]
