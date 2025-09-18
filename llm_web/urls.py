@@ -18,9 +18,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from report.views import report
+from home.views import home_page
 
 urlpatterns = [
     path("admin/", admin.site.urls),
  
-    path("api/", include("dbchat.urls")),
+    path("", include("home.urls")),
+    path("dbchat/", include("dbchat.urls")),
+    path("report/", include("report.urls")),
 ]
