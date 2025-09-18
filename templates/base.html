@@ -1,0 +1,64 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}주연 서버{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">LLM</div>
+    <nav id="sideNav">
+      <a href="{% url 'dbchat:chat_page' %}" class="{% block nav_dbchat_active %}{% endblock %}">
+        <span class="label">데이터 조회</span>
+      </a>
+      <a href="{% url 'report:report' %}" class="{% block nav_report_active %}{% endblock %}">
+        <span class="label">일일 리포트</span>
+      </a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <!-- 상단 제목: 얇은 하단 보더만 -->
+    <header class="topbar topbar-line">
+      <h1 class="page-title">{% block page_title %}메뉴{% endblock %}</h1>
+    </header>
+
+    <!-- 각 앱이 이 영역만 채움 -->
+    <section class="page-body">
+      {% block content %}{% endblock %}
+    </section>
+  </main>
+</div>
+
+<script>
+    (function(){
+      const nav = document.getElementById('sideNav');
+      if(!nav) return;
+    
+      // 라벨을 글자 단위로 분해하되, 공백은 &nbsp; 대체 span으로 처리
+      nav.querySelectorAll('a .label').forEach(lbl=>{
+        const txt = lbl.textContent;
+        const html = Array.from(txt).map(ch=>{
+          if(ch === ' ') return '<span class="ws" aria-hidden="true">&nbsp;</span>';
+          return `<span>${ch}</span>`;
+        }).join('');
+        lbl.innerHTML = html;
+      });
+    
+      // 클릭 시 애니메이션 재생
+      nav.querySelectorAll('a').forEach(a=>{
+        a.addEventListener('click', function(){
+          this.classList.remove('letter-anim');
+          void this.offsetWidth;
+          this.classList.add('letter-anim');
+        });
+      });
+    })();
+    </script>
+    
+</body>
+</html>
