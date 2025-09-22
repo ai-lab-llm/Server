@@ -1,96 +1,38 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}데이터 조회 - 주연 서버{% endblock %}
 {% block page_title %}데이터 조회{% endblock %}
 {% block nav_dbchat_active %}active{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'dbchat/dbchat.css' %}">
+
 <div class="chat-wrap">
-  <!-- 왼쪽: 히스토리 (카드) -->
+  <!-- 왼쪽: 히스토리 -->
   <aside class="chat-history">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-      <div style="width:18px;height:18px;background:#ddd;border-radius:4px;"></div>
-      <span class="small">질문 히스토리 쌓이게</span>
+    <div class="history-head">
+      <span class="small">질문 히스토리</span>
+      <button id="new-thread-btn" class="small">+ 새 대화</button>
     </div>
-    <div id="history"></div>
+    <div id="threads"></div>
   </aside>
 
-  <!-- 오른쪽: 채팅 메인 (카드) -->
+  <!-- 오른쪽: 채팅 메인 -->
   <section class="chat-main">
-    <div id="chat-messages" class="chat-messages">
-      <!-- 메시지가 여기 쌓입니다 -->
-    </div>
+    <div id="chat-messages" class="chat-messages"></div>
+
     <form id="chat-form" class="chat-input">
+      {% csrf_token %}
       <input type="text" id="question" placeholder="질문 입력" autocomplete="off" />
       <button type="submit" title="보내기">▶</button>
     </form>
-    <div class="small" style="padding:8px 12px;">
+
+    <div class="small tip">
       ※ 이 화면에서는 ‘데이터 조회’ 관련 질문만 검색/응답 가능합니다.
     </div>
   </section>
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-  const historyBox = document.getElementById("history");
-  const chatBox    = document.getElementById("chat-messages");
-  const form       = document.getElementById("chat-form");
-  const input      = document.getElementById("question");
-
-  // 메시지 렌더러
-  function addMessage(role, text){
-    const wrap = document.createElement("div");
-    wrap.style.marginBottom = "10px";
-    const who  = document.createElement("div");
-    who.style.fontWeight = "600";
-    who.style.marginBottom = "4px";
-    who.textContent = (role === "user") ? "나" : "AI";
-    const body = document.createElement("div");
-    body.textContent = text;
-    wrap.appendChild(who);
-    wrap.appendChild(body);
-    chatBox.appendChild(wrap);
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
-
-  // 히스토리 불러오기
-  fetch("/dbchat/history")
-    .then(res => res.json())
-    .then(data => {
-      if(!data || !data.history){ return; }
-      data.history.forEach(item => {
-        const p = document.createElement("div");
-        p.className = "list-item";
-        p.textContent = item.question + " → " + item.answer;
-        historyBox.appendChild(p);
-      });
-    })
-    .catch(()=>{ /* 히스토리 실패 시 무시 */ });
-
-  // 질문 전송
-  form.addEventListener("submit", function(e){
-    e.preventDefault();
-    const q = input.value.trim();
-    if(!q) return;
-
-    addMessage("user", q);
-    input.value = "";
-    input.focus();
-
-    fetch("/api/dbchat/ask", {
-      method: "POST",
-      headers: {"Content-Type":"application/x-www-form-urlencoded"},
-      body: "question="+encodeURIComponent(q)
-    })
-    .then(res => res.json())
-    .then(data => {
-      const answer = (data && (data.answer ?? data.response ?? "")) || "응답을 불러오지 못했습니다.";
-      addMessage("ai", answer);
-    })
-    .catch(err => {
-      addMessage("ai", "오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
-      console.error(err);
-    });
-  });
-});
-</script>
+<script src="{% static 'dbchat/dbchat.js' %}"></script>
 {% endblock %}
+
