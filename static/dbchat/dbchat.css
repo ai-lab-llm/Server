@@ -1,142 +1,159 @@
-.chat-wrap {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 16px;
-    height: calc(100vh - 180px); 
+.page-dbchat{
+    overflow:hidden;
+    min-height:0;
   }
   
-  .chat-history {
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 12px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+  .page-dbchat .chat-wrap{
+    display:grid;
+    grid-template-columns:280px 1fr;
+    gap:16px;
+    height:100%;
+    min-height:0;
+    overflow:hidden; /* 바깥 차단 */
   }
   
-  .history-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 18px;
+  /* ===== 좌측 히스토리 패널 ===== */
+  .page-dbchat .chat-history{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    padding:12px;
+  
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    min-height:0;
+  }
+  .page-dbchat .history-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:18px;
+  }
+  .page-dbchat #threads{
+    flex:1;
+    overflow:auto;
+    padding-right:2px;
+    min-height:0;
   }
   
-  .chat-main {
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+  /* ===== 우측 채팅 패널 ===== */
+  .page-dbchat .chat-main{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+  
+    display:flex;
+    flex-direction:column;
+    overflow:hidden; 
+    min-height:0;
   }
+  .page-dbchat .chat-messages{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    overflow:auto;  
+    min-height:0;
+  
+    padding:14px 16px;
+    margin:10px;   
+  }
+  
+  /* 입력 영역 (하단 고정) */
+  .page-dbchat .chat-input{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px;
+    padding:10px;
+    border-top:1px solid #eee;
+    background:#fff;
+  }
+  .page-dbchat .chat-input input{
+    height:44px;
+    border:1px solid #d1d5db;
+    border-radius:10px;
+    padding:0 12px;
+    outline:none;
+  }
+  .page-dbchat .chat-input button{
+    min-width:44px;
+    height:44px;
+    border:none;
+    border-radius:10px;
+    background:#111827;
+    color:#fff;
+    cursor:pointer;
+  }
+  
+  /* 안내 텍스트 */
+  .page-dbchat .tip{ padding:8px 12px; color:#6b7280; }
   
   /* ===== 말풍선 ===== */
-  .bubble {
-    max-width: 70%;
-    margin: 6px 0;
-    padding: 10px 14px;
-    border-radius: 16px;
-    line-height: 1.4;
-    word-break: break-word;
-    white-space: pre-wrap;
+  .page-dbchat .bubble{
+    max-width:70%;
+    margin:6px 0;
+    padding:10px 14px;
+    border-radius:16px;
+    line-height:1.4;
+    word-break:break-word;
+    white-space:pre-wrap;
   }
-  .user-msg { background:#E9E9EB; margin-left:auto; text-align:right; }
-  .ai-msg   { background:#333; color:#fff; margin-right:auto; text-align:left; }
+  .page-dbchat .user-msg{ background:#E9E9EB; margin-left:auto; text-align:right; }
+  .page-dbchat .ai-msg  { background:#333; color:#fff; margin-right:auto; text-align:left; }
   
-  /* ===== 채팅 영역 ===== */
-  .chat-messages {
-    flex: 1;
-    padding: 14px 16px;
-    margin: 10px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
+  /* ===== 히스토리 리스트 아이템 ===== */
+  .page-dbchat .list-item{
+    position:relative;
+    padding:10px 28px 10px 12px; 
+    border-radius:10px;
+    cursor:pointer;
   }
-  
-  .chat-input {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 8px;
-    padding: 10px;
-    border-top: 1px solid #eee;
-  }
-  .chat-input input {
-    height: 44px;
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-    padding: 0 12px;
-    outline: none;
-  }
-  .chat-input button {
-    min-width: 44px;
-    height: 44px;
-    border: none;
-    border-radius: 10px;
-    background: #111827;
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  .tip { padding: 8px 12px; color:#6b7280; }
-  
-  /* ===== 좌측 히스토리 ===== */
-  #threads {
-    overflow-y: auto;
-    padding-right: 2px;
-    flex: 1;
-  }
-  
-  .list-item {
-    position: relative;
-    padding: 10px 28px 10px 12px; /* 우측 ... 버튼 공간 */
-    border-radius: 10px;
-    cursor: pointer;
-  }
-  .list-item + .list-item { margin-top: 6px; }
-  .list-item.active { background: #f0f0f4; }
-  .list-item .title { display:block; font-weight:600; margin-bottom:2px; }
-  .muted { color:#6b7280; font-size:12px; }
+  .page-dbchat .list-item + .list-item{ margin-top:6px; }
+  .page-dbchat .list-item.active{ background:#f0f0f4; }
+  .page-dbchat .list-item .title{ display:block; font-weight:600; margin-bottom:2px; }
+  .page-dbchat .muted{ color:#6b7280; font-size:12px; }
   
   /* ... 버튼 */
-  .more-btn {
-    position: absolute;
-    right: 6px; top: 50%;
-    transform: translateY(-50%);
-    display: none;
-    width: 22px; height: 22px;
-    border-radius: 6px;
-    line-height: 22px;
-    text-align: center;
-    color: #6b7280;
-    background: transparent;
-    cursor: pointer;
-    user-select: none;
+  .page-dbchat .more-btn{
+    position:absolute;
+    right:6px; top:50%;
+    transform:translateY(-50%);
+    display:none;
+    width:22px; height:22px;
+    border-radius:6px;
+    line-height:22px;
+    text-align:center;
+    color:#6b7280;
+    background:transparent;
+    cursor:pointer;
+    user-select:none;
   }
-  .list-item:hover .more-btn { display: block; }
-  .more-btn:hover { background:#ececec; color:#111; }
+  .page-dbchat .list-item:hover .more-btn{ display:block; }
+  .page-dbchat .more-btn:hover{ background:#ececec; color:#111; }
   
-  /* 간단 컨텍스트 메뉴 */
-  .ctx {
-    position: absolute;
-    right: 6px; top: 36px;
-    margin-top: 5px;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-    display: none;
-    z-index: 10;
-    overflow: hidden;
-    min-width: 85px;
+  /* 컨텍스트 메뉴 */
+  .page-dbchat .ctx{
+    position:absolute;
+    right:6px; top:36px;
+    margin-top:5px;
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:8px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.08);
+    display:none;
+    z-index:10;
+    overflow:hidden;
+    min-width:85px;
   }
-  .ctx button {
-    display: block;
-    width: 100%;
-    background: none;
-    border: none;
-    padding: 8px 12px;
-    text-align: left;
-    cursor: pointer;
-    font-size: 13px;
+  .page-dbchat .ctx button{
+    display:block;
+    width:100%;
+    background:none;
+    border:none;
+    padding:8px 12px;
+    text-align:left;
+    cursor:pointer;
+    font-size:13px;
   }
-  .ctx button:hover { background: #f5f5f5; }
+  .page-dbchat .ctx button:hover{ background:#f5f5f5; }
   

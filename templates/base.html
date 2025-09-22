@@ -28,7 +28,7 @@
     </header>
 
     <!-- 각 앱이 이 영역만 채움 -->
-    <section class="page-body">
+    <section class="page-body {% block page_class %}{% endblock %}">
       {% block content %}{% endblock %}
     </section>
   </main>
