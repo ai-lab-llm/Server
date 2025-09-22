@@ -1,47 +1,48 @@
-from django.db import models
 import uuid
+from django.db import models
+from django.utils import timezone
 
+ROLE_CHOICES = (
+    ("user", "User"),
+    ("assistant", "Assistant"),
+    ("system", "System"),
+)
 
-class ChatSession(models.Model):
-    """
-    DB Chat의 대화 세션.
-    - session_id: 프론트가 보관/요청에 사용하는 공개용 UUID
-    """
-    session_id = models.CharField(max_length=64, unique=True, default=lambda: str(uuid.uuid4()))
-    title = models.CharField(max_length=255, default="데이터 조회")
-    origin = models.CharField(max_length=50, default="dbchat")   # 페이지/출처 구분
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+# 좌측 히스토리에 쌓이는 '대화 세션' 단위
+class ChatThread(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=120, blank=True, default="")     
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now, db_index=True)
+    is_archived = models.BooleanField(default=False)
 
-    class Meta:
-        indexes = [
-            models.Index(fields=["origin", "-updated_at"]),
-        ]
+    # 로그인 없이 쓰는 경우 세션키로 사용자 구분
+    django_session_key = models.CharField(max_length=64, blank=True, default="", db_index=True)
 
+    # 페이지 구분
+    page = models.CharField(max_length=32, blank=True, default="dbchat", db_index=True)
 
+    def touch(self):
+        self.updated_at = timezone.now()
+        self.save(update_fields=["updated_at"])
+
+    def __str__(self):
+        return self.title or f"대화 {self.pk}"
+
+# 오른쪽 채팅창에 보이는 말풍선 한 줄
 class ChatMessage(models.Model):
-    """
-    한 '질문-답변(turn)' 단위.
-    - message_id: 질문 식별자(qid). SSE 스트림과 히스토리 조회에 사용
-    - question / answer: 간단히 한 row에 묶음(필요하면 나중에 role-메시지 테이블로 분리)
-    - status: generating / done / error 등
-    - options/ui_context: 요청 원본을 남겨 디버깅 및 재현 편의
-    """
-    message_id = models.CharField(max_length=64, unique=True, default=lambda: str(uuid.uuid4()))
-    session = models.ForeignKey(ChatSession, on_delete=models.CASCADE, related_name="messages")
-    question = models.TextField()
-    answer = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=20, default="queued")   # queued|generating|done|error
-    error = models.JSONField(blank=True, null=True)
+    thread = models.ForeignKey(ChatThread, on_delete=models.CASCADE, related_name="messages")
+    role = models.CharField(max_length=16, choices=ROLE_CHOICES)
+    content = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now, db_index=True)
 
-    options = models.JSONField(blank=True, null=True)
-    ui_context = models.JSONField(blank=True, null=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    finished_at = models.DateTimeField(blank=True, null=True)
+    # 분석/디버깅용 메타
+    meta = models.JSONField(default=dict, blank=True)  # { "latency_ms":..., "tokens":..., "last_sql":... 등 }
 
     class Meta:
         indexes = [
-            models.Index(fields=["session", "-created_at"]),
-            models.Index(fields=["message_id"]),
+            models.Index(fields=["thread", "created_at"]),
         ]
+
+    def __str__(self):
+        return f"[{self.role}] {self.content[:30]}"

@@ -3,19 +3,13 @@ from . import views
 
 app_name = "dbchat"
 
-# urlpatterns = [
-#     # 화면 /dbchat
-#     path("dbchat", views.chat_page, name="chat_page"),
-
-#     # API
-#     path("dbchat/sessions", views.create_or_list_sessions, name="sessions"),        # POST 생성 / GET 목록
-#     path("dbchat/ask", views.ask_api, name="ask_api"),                               # POST 질문 전송
-#     path("dbchat/stream", views.stream_answer_sse, name="stream_answer_sse"),       # GET SSE 토큰 스트림
-#     path("dbchat/history", views.history_api, name="history_api"),                  # GET 질문 내역 조회
-# ]
-
 urlpatterns = [
     path("", views.chat_page, name="chat_page"),
-    path("history", views.history_api, name="history_api"),
-    path("ask", views.ask_api, name="ask_api"),
+
+    path("threads", views.ThreadListAPI.as_view(), name="dbchat_threads"),
+    path("threads/new", views.NewThreadAPI.as_view(), name="dbchat_new_thread"),
+    path("threads/<uuid:thread_id>/rename", views.RenameThreadAPI.as_view(), name="dbchat_rename_thread"),
+    path("threads/<uuid:thread_id>/messages", views.MessageListAPI.as_view(), name="dbchat_list_messages"),
+    path("threads/<uuid:thread_id>/delete", views.DeleteThreadAPI.as_view(), name="dbchat_delete_thread"),
+    path("ask", views.AskAPI.as_view(), name="dbchat_ask"),
 ]
