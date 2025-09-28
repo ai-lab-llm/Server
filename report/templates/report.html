@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}일일리포트 - 해름 서버{% endblock %}
+{% block page_title %}일일리포트{% endblock %}
+{% block nav_report_active %}active{% endblock %}
+{% block page_class %}page-report{% endblock %}
+
+{% block content %}
+<main class="main">
+  <div class="form-card" style="padding:20px; border:1px solid #ccc; border-radius:8px;max-width:300px;">
+    <form method="get" action="{% url 'report:report_page' %}" style="display:flex; flex-direction:column; gap:10px;">
+      <div>
+        <label for="name">보호대상자</label><br>
+        <input id="name" name="name" type="text" value="{{ request.GET.name|default:'' }}" style="width:100%;"/>
+      </div>
+  
+      <div>
+        <label for="period">기간</label><br>
+        <input id="period" name="period" type="text" value="{{ request.GET.period|default:'' }}" style="width:100%;"/>
+      </div>
+  
+      <button type="submit" class="btn" style="align-self:flex-start;">리포트 생성</button>
+    </form>
+  </div>
+</main>
+{% endblock %}

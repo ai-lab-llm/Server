@@ -25,5 +25,5 @@ urlpatterns = [
  
     path("", include("home.urls")),
     path("dbchat/", include("dbchat.urls")),
-    path("report/", include("report.urls")),
+    path("report/", include("report.urls",namespace='report')),
 ]
