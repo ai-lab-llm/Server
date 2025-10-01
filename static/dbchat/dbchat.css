@@ -65,6 +65,7 @@
     grid-template-columns:1fr auto;
     gap:8px;
     padding:10px;
+    margin: 0 8px 6px;
     border-top:1px solid #eee;
     background:#fff;
   }
@@ -156,4 +157,33 @@
     font-size:13px;
   }
   .page-dbchat .ctx button:hover{ background:#f5f5f5; }
-  
+
+/* 로딩 말풍선 기본 크기/정렬 확보 */
+.bubble.ai-msg.loading{
+  display:inline-flex;
+  align-items:center;
+  min-height:44px;        
+  min-width:60px;        
+  padding:12px 16px;      
+}
+
+/* 점 3개 타이핑 애니메이션 */
+.typing-dots{
+  display:inline-flex;
+  gap:6px;
+  align-items:center;
+}
+.typing-dots span{
+  width:7px; height:7px;
+  border-radius:50%;
+  background: currentColor;   
+  opacity:.35;
+  animation: dots-bounce 1.2s infinite ease-in-out;
+}
+.typing-dots span:nth-child(2){ animation-delay: .15s; }
+.typing-dots span:nth-child(3){ animation-delay: .30s; }
+
+@keyframes dots-bounce{
+  0%, 80%, 100% { transform: translateY(0);   opacity:.35; }
+  40%           { transform: translateY(-4px); opacity:.9; }
+}
