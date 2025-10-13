@@ -7,20 +7,100 @@
 
 {% block content %}
 <main class="main">
-  <div class="form-card" style="padding:20px; border:1px solid #ccc; border-radius:8px;max-width:300px;">
-    <form method="get" action="{% url 'report:report_page' %}" style="display:flex; flex-direction:column; gap:10px;">
-      <div>
-        <label for="name">보호대상자</label><br>
-        <input id="name" name="name" type="text" value="{{ request.GET.name|default:'' }}" style="width:100%;"/>
-      </div>
-  
-      <div>
-        <label for="period">기간</label><br>
-        <input id="period" name="period" type="text" value="{{ request.GET.period|default:'' }}" style="width:100%;"/>
-      </div>
-  
-      <button type="submit" class="btn" style="align-self:flex-start;">리포트 생성</button>
-    </form>
+  <div style="display:flex; gap:20px; align-items:flex-start;">
+    <!-- 입력 Form -->
+    <div class="form-card" style="padding:20px; border:1px solid #ccc; border-radius:8px; max-width:400px; flex-shrink:0; background:#fff;">
+      <form method="get" action="{% url 'report:report_page' %}" style="display:flex; flex-direction:column; gap:10px; position:relative;">
+        <div style="position:relative;">
+          <label for="name">보호대상자</label><br>
+          <input id="name" name="name" type="text" value="{{ request.GET.name|default:'' }}" style="width:100%;" autocomplete="off"/>
+          <!-- 자동완성 리스트 -->
+          <ul id="name-list" style="position:absolute; top:100%; left:0; right:0; background:#fff; border:1px solid #ccc; border-top:none; max-height:150px; overflow-y:auto; list-style:none; margin:0; padding:0; display:none; z-index:10;"></ul>
+        </div>
+
+        <div>
+          <label for="period">날짜 선택</label><br>
+          <!-- 👇 클릭 시 캘린더 뜨는 입력창 -->
+          <input id="period" name="period" type="date" value="{{ request.GET.period|default:'' }}" style="width:100%;" />
+        </div>
+
+        <button type="submit" class="btn" style="align-self:flex-start;">리포트 생성</button>
+      </form>
+    </div>
+
+    <!-- AI 리포트 -->
+    {% if report %}
+    <div style="flex-grow:1; padding:15px; border:1px solid #aaa; border-radius:8px; background:#f9f9f9; max-height:800px; overflow-y:auto;">
+      <h3>{{ request.GET.period }} 일일 보고: {{ request.GET.name }}</h3>
+      <pre style="white-space:pre-wrap; font-family:inherit;">{{ report }}</pre>
+    </div>
+    {% endif %}
   </div>
 </main>
+
+<!-- ==================== JS Script ==================== -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const nameInput = document.getElementById('name');
+  const nameList = document.getElementById('name-list');
+  let timeout = null;
+
+  // 자동완성 기능
+  nameInput.addEventListener('input', function() {
+    clearTimeout(timeout);
+    const query = nameInput.value.trim();
+    if (!query) {
+      nameList.style.display = 'none';
+      return;
+    }
+
+    timeout = setTimeout(() => {
+      fetch(`/report/autocomplete_name/?q=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(data => {
+          nameList.innerHTML = '';
+          if (data.length === 0) {
+            nameList.style.display = 'none';
+            return;
+          }
+
+          data.forEach(name => {
+            const li = document.createElement('li');
+            li.textContent = name;
+            li.style.padding = '6px 10px';
+            li.style.cursor = 'pointer';
+            li.addEventListener('click', () => {
+              nameInput.value = name;
+              nameList.style.display = 'none';
+            });
+            li.addEventListener('mouseenter', () => li.style.background = '#f0f0f0');
+            li.addEventListener('mouseleave', () => li.style.background = '#fff');
+            nameList.appendChild(li);
+          });
+
+          nameList.style.display = 'block';
+        });
+    }, 200);
+  });
+
+  // input 밖 클릭 시 자동완성 닫기
+  document.addEventListener('click', (e) => {
+    if (!nameInput.contains(e.target) && !nameList.contains(e.target)) {
+      nameList.style.display = 'none';
+    }
+  });
+
+  // 날짜 선택 시 자동 포맷 (yyyy-mm-dd)
+  const periodInput = document.getElementById('period');
+  periodInput.addEventListener('change', function() {
+    const selectedDate = new Date(this.value);
+    if (!isNaN(selectedDate)) {
+      const yyyy = selectedDate.getFullYear();
+      const mm = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const dd = String(selectedDate.getDate()).padStart(2, '0');
+      this.value = `${yyyy}-${mm}-${dd}`;
+    }
+  });
+});
+</script>
 {% endblock %}
