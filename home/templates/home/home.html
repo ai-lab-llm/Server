@@ -33,18 +33,39 @@
       <h4>조회 가능 데이터 항목</h4>
 
       <div class="data-section">
-        <h3>PPG 위험 지수</h3>
+        <h3>PPG 위험 지수 (imu_danger_level)</h3>
         <p>PPG 센서를 통해 측정된 심박수 분석에 따라, 80 이상을 초과하면 위험 상태로 판단하는 지표입니다. 사용자는 이 수치를 통해 자신의 신체 긴장도나 스트레스 상태를 실시간으로 확인할 수 있습니다.</p>
       </div>
 
       <div class="data-section">
-        <h3>심박변이도</h3>
+        <h3>심박변이도(HRV)</h3>
         <p>심박변이도(HRV)는 심장 박동 사이의 간격 변화를 분석해 신체의 스트레스 상태를 파악하는 지표입니다. 변이도가 낮으면 신체가 긴장 상태일 가능성이 높습니다.</p>
       </div>
 
       <div class="data-section">
         <h3>스트레스 지수</h3>
-        <p>스트레스 지수는 0~100까지의 점수로 나타낸 지표입니다.</p>
+        <p>스트레스 지수를 0~100까지의 점수로 나타낸 지표입니다. 스트레스 지수가 80 이상이면 위험 상황으로 판단할 수 있습니다.</p>
+      </div>
+
+      <div class="data-section">
+        <h3>외부 충격 지수(imu_danger_level)</h3>
+        <p>
+IMU 센서를 통해 측정된 데이터로, 충격이 가해졌을 때 수집됩니다. 1~5 사의의 지수로 높은 숫자일 수록 강한 충격을 의미합니다. 4이상을 위험 상황이라고 예측할 수 있습니다. </p>
+      </div>
+
+      <div class="data-section">
+        <h3>위치</h3>
+        <p>보호 대상자의 위치를 확인하여 보호활동에 도움을 받을 수 있습니다. </p>
+      </div>
+
+      <div class="data-section">
+        <h3>안전구역 위치 여부</h3>
+        <p>보호 대상자가 일상적으로 위치하는 구역은 안전구역으로 설정했습니다. 실시간으로 위치를 추적하여 안전구역을 벗어나면 이상 경로라고 판단할 수 있습니다. </p>
+      </div>
+
+      <div class="data-section">
+        <h3>타임스탬프</h3>
+        <p>각 데이터가 입력되는 시간을 확인할 수 있습니다. 즉 이벤트가 일어난 시점 파악이 가능합니다.</p>
       </div>
     </div>
   </div>
@@ -180,15 +201,15 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 .data-section {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 .data-section h3 {
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 20px;
 }
 .data-section p {
-  font-size: 13px;
+  font-size: 15px;
   color: #555;
   line-height: 1.6;
 }

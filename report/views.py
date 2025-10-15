@@ -34,11 +34,11 @@ def build_report_prompt(
 연결 끊김 타임라인: {disconnected_timeline}
 
 각 timeline은 아래의 쿼리문을 실행해서 나온 결과이다. 참고하시오:
- GROUP_CONCAT(CASE WHEN f.ppg_threat_detected >= 80 THEN f.timestamp || '|' || f.ppg_threat_detected || '|' || f.imu_danger_level || '|' || f.hrv || '|' || f.stress || '|' || f.zone_type END, ';') AS ppg_event_group,
-    GROUP_CONCAT(CASE WHEN f.imu_danger_level >= 4 THEN f.timestamp || '|' || f.ppg_threat_detected || '|' || f.imu_danger_level || '|' || f.hrv || '|' || f.stress || '|' || f.zone_type END, ';') AS imu_event_group,
-    GROUP_CONCAT(CASE WHEN f.hrv >= 120 OR f.hrv<=40 THEN f.timestamp || '|' || f.ppg_threat_detected || '|' || f.imu_danger_level || '|' || f.hrv || '|' || f.stress || '|' || f.zone_type END, ';') AS hrv_event_group,
-    GROUP_CONCAT(CASE WHEN f.stress >= 80 THEN f.timestamp || '|' || f.ppg_threat_detected || '|' || f.imu_danger_level || '|' || f.hrv || '|' || f.stress || '|' || f.zone_type END, ';') AS stress_event_group,
-    GROUP_CONCAT(CASE WHEN f.zone_type = 'unfamiliar' THEN f.timestamp || '|' || f.ppg_threat_detected || '|' || f.imu_danger_level || '|' || f.hrv || '|' || f.stress || '|' || f.zone_type END, ';') AS unfamiliar_event_group,
+ GROUP_CONCAT(CASE WHEN f.ppg_threat_detected >= 80 THEN f.timestamp || '|' || f.ppg_threat_detected  END, ';') AS ppg_event_group,
+    GROUP_CONCAT(CASE WHEN f.imu_danger_level >= 4 THEN f.timestamp || '|' || f.imu_danger_level END, ';') AS imu_event_group,
+    GROUP_CONCAT(CASE WHEN f.hrv >= 120 OR f.hrv<=40 THEN f.timestamp || '|' || f.hrv END, ';') AS hrv_event_group,
+    GROUP_CONCAT(CASE WHEN f.stress >= 80 THEN f.timestamp || '|' || f.stress END, ';') AS stress_event_group,
+    GROUP_CONCAT(CASE WHEN f.zone_type = 'unfamiliar' THEN f.timestamp || '|' || f.zone_type END, ';') AS unfamiliar_event_group,
 
     -- 2조건 이상 동시 충족 타임라인
     GROUP_CONCAT(
@@ -60,7 +60,6 @@ def build_report_prompt(
 4. 종합 의견 및 제안: 위험 이벤트의 의미, 주의할 점, 제안 등
 
 다음의 예시를 참고해서 입력받은 데이터를 기반으로 보고서를 작성합니다:
-**[2025년 8월 13일 일일 보고: 김민지]**
 
 **핵심 요약**
 오늘 하루 대부분 안정적이었으나, 오후 4시 30분경 '등록되지 않은 지역'에서 외부 충격과 극심한 스트레스 반응이 동반된 복합 위협이 1회 발생했습니다.
