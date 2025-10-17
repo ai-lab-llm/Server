@@ -1,6 +1,6 @@
 :root{
   --sidebar-w:220px;
-  --accent:#111;
+  --accent:#0054A6;
   --bg:#f7f7f8;
 }
 
@@ -25,22 +25,25 @@ html,body{
   width:var(--sidebar-w);
   background:#fff;
   border-right:1px solid #eee;
-  padding:16px;
 }
 .logo{ font-weight:700; margin-bottom:24px; font-size:25px; padding-left:10px; }
+
 
 /* 링크/비활성 항목 */
 .sidebar nav a,
 .sidebar nav .nav-disabled{
-  display:block;
+  display:flex;                 /* 이미지+텍스트 나란히 정렬 */
+  align-items:left;
   padding:10px 12px;
   margin-bottom:10px;
   border-radius:10px;
   text-decoration:none;
-  color:#111;
+  color:#616161;                   
+  transition:background .2s;
+  width:100%;
 }
 .sidebar nav a:hover{ background:#f7f7f8; }
-.sidebar nav a.active{ background:#111; color:#fff; font-weight:600; }
+.sidebar nav a.active{ background:#0054A6; color:#fff; font-weight:700; }
 .nav-disabled{ color:#aaa; cursor:not-allowed; }
 
 /* 글자 이펙트 시 세로쌓임 방지 + 공백 보존 */

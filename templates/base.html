@@ -9,56 +9,39 @@
 </head>
 <body>
 <div class="app">
+
+  <!-- ✅ 좌측 사이드바 -->
   <aside class="sidebar">
-    <div class="logo">LLM</div>
+    <!-- ✅ 텍스트 로고 -->
+    <div class="logo">ooAgent</div>
+
+    <!-- ✅ 네비게이션 (홈 화면 추가 + 아이콘 이미지 표시) -->
     <nav id="sideNav">
+      <a href="{% url 'home:home' %}"  class="{% block nav_home_active %}{% endblock %}">
+        <img src="{% static 'icons/House.png' %}" alt="홈" class="nav-icon"> 
+        <span class="label">홈 화면</span>
+      </a>
       <a href="{% url 'dbchat:chat_page' %}" class="{% block nav_dbchat_active %}{% endblock %}">
+        <img src="{% static 'icons/nav_data.png' %}" alt="데이터 조회" class="nav-icon">
         <span class="label">데이터 조회</span>
       </a>
       <a href="{% url 'report:report_page' %}" class="{% block nav_report_active %}{% endblock %}">
+        <img src="{% static 'icons/nav_report.png' %}" alt="일일 리포트" class="nav-icon">
         <span class="label">일일 리포트</span>
       </a>
     </nav>
   </aside>
 
+  <!-- ✅ 메인 콘텐츠 영역 -->
   <main class="content">
-    <!-- 상단 제목: 얇은 하단 보더만 -->
     <header class="topbar topbar-line">
-      <h1 class="page-title">{% block page_title %}메뉴{% endblock %}</h1>
+      <h1 class="page-title">{% block page_title %}Home{% endblock %}</h1>
     </header>
-
-    <!-- 각 앱이 이 영역만 채움 -->
     <section class="page-body {% block page_class %}{% endblock %}">
       {% block content %}{% endblock %}
     </section>
   </main>
-</div>
 
-<script>
-    (function(){
-      const nav = document.getElementById('sideNav');
-      if(!nav) return;
-    
-      // 라벨을 글자 단위로 분해하되, 공백은 &nbsp; 대체 span으로 처리
-      nav.querySelectorAll('a .label').forEach(lbl=>{
-        const txt = lbl.textContent;
-        const html = Array.from(txt).map(ch=>{
-          if(ch === ' ') return '<span class="ws" aria-hidden="true">&nbsp;</span>';
-          return `<span>${ch}</span>`;
-        }).join('');
-        lbl.innerHTML = html;
-      });
-    
-      // 클릭 시 애니메이션 재생
-      nav.querySelectorAll('a').forEach(a=>{
-        a.addEventListener('click', function(){
-          this.classList.remove('letter-anim');
-          void this.offsetWidth;
-          this.classList.add('letter-anim');
-        });
-      });
-    })();
-    </script>
-    
+</div>
 </body>
 </html>
