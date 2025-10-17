@@ -1,10 +1,18 @@
-// 리버스 프록시(Nginx)로 /api → FastAPI 라우팅할 때:
-const API_BASE = "http://127.0.0.1:8080/api";
-// 프록시 없이 FastAPI가 8001 포트에서 따로 돌면:
-// const API_BASE = "http://localhost:8001/api";
+const API_BASE = "/dbchat/api";  
+
+
+// ... fetch 할 때 헤더에 CSRF 같이 보내기:
+const res = await fetch(`${API_BASE}/ask_stream`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-CSRFToken": csrftoken
+  },
+  body: JSON.stringify({ question: q })
+});
 
 // ===== 스트리밍 속도 설정 =====
-const STREAM_CPS = 18;   // 초당 글자 수(낮을수록 더 느리게)
+const STREAM_CPS = 80;   // 초당 글자 수(낮을수록 더 느리게)
 const TICK_MS    = 50;   // 화면 갱신 주기(ms)
 
 function getCookie(name){
