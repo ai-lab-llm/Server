@@ -1,15 +1,5 @@
-const API_BASE = "/dbchat/api";  
+const API_BASE = "/dbchat/api";
 
-
-// ... fetch 할 때 헤더에 CSRF 같이 보내기:
-const res = await fetch(`${API_BASE}/ask_stream`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "X-CSRFToken": csrftoken
-  },
-  body: JSON.stringify({ question: q })
-});
 
 // ===== 스트리밍 속도 설정 =====
 const STREAM_CPS = 80;   // 초당 글자 수(낮을수록 더 느리게)

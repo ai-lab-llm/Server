@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import views_api
 
 app_name = "dbchat"
 
@@ -12,4 +13,7 @@ urlpatterns = [
     path("threads/<uuid:thread_id>/messages", views.MessageListAPI.as_view(), name="dbchat_list_messages"),
     path("threads/<uuid:thread_id>/delete", views.DeleteThreadAPI.as_view(), name="dbchat_delete_thread"),
     path("ask", views.AskAPI.as_view(), name="dbchat_ask"),
+
+    path("api/ask", views_api.api_ask),
+    path("api/ask_stream", views_api.api_ask_stream),
 ]

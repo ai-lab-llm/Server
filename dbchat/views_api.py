@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from dbchat.app.entrypoint import ask_once
 from dbchat.app.utils.intent import classify_intent_llm, list_known_names
 
-def _guide() -> string:
+def _guide() -> str:
     names = list_known_names(limit=3)
     hint = f" (예: {', '.join(names)})" if names else ""
     return "이 화면은 보호대상자 데이터 조건 검색 전용입니다.\n누구의 어떤 정보를 원하시나요?" + hint
