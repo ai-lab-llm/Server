@@ -1,0 +1,15 @@
+.git
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+venv
+.env
+mistral-7b-merged/
+*.tar.gz
+*.pt
+*.bin
+*.ckpt
+*.safetensors
