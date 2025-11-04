@@ -20,6 +20,8 @@ from django.urls import path,include
 from report.views import report
 from home.views import home_page
 
+print("✅ urls.py loaded")
+
 urlpatterns = [
     path("admin/", admin.site.urls),
  

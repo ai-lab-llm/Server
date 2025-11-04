@@ -1,11 +1,11 @@
 from django.shortcuts import render
+print("✅ report/views.py loaded")
 from .db_service import get_daily_data
 from .ai_service import generate_report
 import re
 from django.http import JsonResponse
 from .models import User
 import sqlite3
-
 
 def build_report_prompt(
     person, date,threat_count, imu_count, hrv_count, stress_count,
@@ -140,7 +140,7 @@ def autocomplete_name(request):
     if not query:
         return JsonResponse([], safe=False)
 
-    db_path = r"C:\Users\user\Server\db\proctee.db"  # 절대경로 사용
+    db_path = r"C:\Users\user\Server\db\protectee.db"  # 절대경로 사용
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
