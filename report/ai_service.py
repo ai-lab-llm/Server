@@ -1,7 +1,8 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
-import torch
+from django.conf import settings
+import torch, os
 
-MODEL_PATH = "C:/Users/user/Server/mistral-7b-merged"
+MODEL_PATH = os.path.join(settings.BASE_DIR, "mistral-7b-merged")
 
 # 전역 변수 초기화만 함
 tokenizer = None
@@ -16,7 +17,7 @@ def load_model():
         model = AutoModelForCausalLM.from_pretrained(
             MODEL_PATH,
             torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-            device_map="auto",
+            device_map={"": "cuda:1"},     
             trust_remote_code=True
         )
         hf_pipeline = pipeline(

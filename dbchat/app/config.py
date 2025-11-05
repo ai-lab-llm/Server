@@ -4,7 +4,7 @@ from typing import Optional
 
 class Settings(BaseSettings):
     model_id: str = Field(default="meta-llama/Meta-Llama-3.1-8B-Instruct", description="HF model id")
-    device_map: str = Field(default="cuda:0", description="transformers device_map value (e.g., 'cuda:1' or 'auto')")
+    device_map: str = Field(default="cuda:0", description="transformers device_map value (e.g., 'cuda:0' or 'auto')")
     max_new_tokens: int = 256
     temperature: float = 0.0
 
