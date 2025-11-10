@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.logger import setup_logging
-from app.routes import chat
+# from app.routes import chat
 
 setup_logging("INFO")
 app = FastAPI(title="Protectee SQL Agent API", debug=settings.debug)
@@ -25,5 +25,5 @@ async def health():
 async def api_health():
     return {"status": "ok"}
 
-# /api/ask 등 라우터
-app.include_router(chat.router, prefix=settings.api_prefix, tags=["chat"])
+# # /api/ask 등 라우터
+# app.include_router(chat.router, prefix=settings.api_prefix, tags=["chat"])

@@ -49,8 +49,7 @@
 
       <div class="data-section">
         <h3>외부 충격 지수(imu_danger_level)</h3>
-        <p>
-IMU 센서를 통해 측정된 데이터로, 충격이 가해졌을 때 수집됩니다. 1~5 사의의 지수로 높은 숫자일 수록 강한 충격을 의미합니다. 4이상을 위험 상황이라고 예측할 수 있습니다. </p>
+        <p>IMU 센서를 통해 측정된 데이터로, 충격이 가해졌을 때 수집됩니다. 1~5 사의의 지수로 높은 숫자일 수록 강한 충격을 의미합니다. 4이상을 위험 상황이라고 예측할 수 있습니다. </p>
       </div>
 
       <div class="data-section">
@@ -188,6 +187,9 @@ document.addEventListener('DOMContentLoaded', () => {
   display: flex;
   justify-content: center; /* 화면 거의 꽉 차게 중앙 정렬 */
   align-items: flex-start;
+  overflow-y: auto; 
+  height: 100%;
+  overflow: hidden;
 }
 
 .right-panel .card {
@@ -198,6 +200,9 @@ document.addEventListener('DOMContentLoaded', () => {
   width: 100%; /* 왼쪽부터 오른쪽까지 꽉 채움 */
   max-width: none; /* 폭 제한 제거 */
   height: 100%;
+  flex-shrink: 0; 
+  overflow-y: auto; 
+  box-sizing: border-box;
 }
 
 .data-section {
